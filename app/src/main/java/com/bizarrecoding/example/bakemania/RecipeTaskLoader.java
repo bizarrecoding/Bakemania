@@ -43,6 +43,14 @@ public class RecipeTaskLoader extends AsyncTaskLoader<List<Recipe>> {
             for (int i = 0; i < json.length(); i++){
                 JSONObject recipejs = json.getJSONObject(i);
                 Recipe recipe = new Recipe(recipejs);
+                recipe.setId((long) i);
+                String[] values = new String[]{ String.valueOf(i) };
+                boolean exist = 0 < Recipe.count(Recipe.class,"id=?",values);
+                if (!exist) {
+                    recipe.save();
+                }else {
+                    recipe.update();
+                }
                 results.add(recipe);
             }
         }catch (Exception e){

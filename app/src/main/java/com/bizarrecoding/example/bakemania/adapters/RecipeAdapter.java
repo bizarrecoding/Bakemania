@@ -3,6 +3,7 @@ package com.bizarrecoding.example.bakemania.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import butterknife.ButterKnife;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 
-    private ArrayList<Recipe> recipes;
+    private List<Recipe> recipes;
     private Context ctx;
 
     public RecipeAdapter(List<Recipe> items){
@@ -29,7 +30,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     }
 
     public void setRecipes(List<Recipe> recipes) {
-        this.recipes.addAll(recipes);
+        //this.recipes.addAll(recipes);
+        this.recipes = Recipe.listAll(Recipe.class);
         notifyDataSetChanged();
     }
 
@@ -55,7 +57,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 Intent in = new Intent(ctx, StepsActivity.class);
-                in.putExtra("Recipe",recipe);
+                in.putExtra("Recipe",recipe.getId());
+                Log.d("RECIPE","selected: "+recipe.getId()
+                        +"\nrid: "+recipe.getRid());
                 ctx.startActivity(in);
                 //TODO: open stepsActivity intent
             }

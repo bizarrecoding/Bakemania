@@ -48,13 +48,14 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
 
     private Step step;
     private SimpleExoPlayer mExoPlayer;
+    private long stepId;
 
     public StepDetailsFragment() {}
 
-    public static StepDetailsFragment newInstance(Step step) {
+    public static StepDetailsFragment newInstance(Long stepId) {
         StepDetailsFragment fragment = new StepDetailsFragment();
         Bundle args = new Bundle();
-        args.putParcelable("Step",step);
+        args.putLong("Step",stepId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,7 +64,8 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            step = getArguments().getParcelable("Step");
+            stepId = getArguments().getLong("Step");
+            step = Step.findById(Step.class,stepId);
         }
     }
 
@@ -73,7 +75,7 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
         View view = inflater.inflate(R.layout.fragment_step_details, container, false);
         ButterKnife.bind(this, view);
         if (step.getId() > 0) {
-            title.setText("Step #" + step.getId());
+            title.setText("Step #" + stepId);
         }else{
             title.setText("Introduction");
         }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,9 @@ import com.bizarrecoding.example.bakemania.R;
 import com.bizarrecoding.example.bakemania.adapters.StepAdapter;
 import com.bizarrecoding.example.bakemania.objects.Recipe;
 import com.bizarrecoding.example.bakemania.objects.Step;
+
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class StepListFragment extends Fragment {
 
@@ -26,10 +30,11 @@ public class StepListFragment extends Fragment {
     public StepListFragment() {
     }
 
-    public static StepListFragment newInstance(Recipe recipe) {
+    public static StepListFragment newInstance(Long recipeId) {
         StepListFragment fragment = new StepListFragment();
         Bundle args = new Bundle();
-        args.putParcelable("Recipe",recipe);
+        args.putLong("Recipe",recipeId);
+        Log.d("Recipe","id: "+recipeId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -38,7 +43,8 @@ public class StepListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            recipe = (Recipe) getArguments().getParcelable("Recipe");
+            Long recipeId = getArguments().getLong("Recipe");
+            recipe = Recipe.findById(Recipe.class,recipeId);
         }
     }
 
@@ -50,7 +56,9 @@ public class StepListFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new StepAdapter(recipe.getSteps(), mListener));
+            List<Step> steps = Step.find(Step.class,"rid=?", String.valueOf(recipe.getRid()));
+            Log.d("STEPS","rid: "+recipe.getRid()+" found: "+steps.size());
+            recyclerView.setAdapter(new StepAdapter(steps, mListener));
         }
         return view;
     }

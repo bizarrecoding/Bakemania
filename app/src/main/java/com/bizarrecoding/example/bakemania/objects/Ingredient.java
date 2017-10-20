@@ -3,13 +3,36 @@ package com.bizarrecoding.example.bakemania.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+
+import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
+
 import org.json.JSONObject;
 import java.io.Serializable;
 
-public class Ingredient implements Parcelable{
+public class Ingredient extends SugarRecord{
+
+    long idingredient;
+    long rid;
     int quantity;
     String measure;
     String name;
+
+    public long getIdingredient() {
+        return idingredient;
+    }
+
+    public void setIdingredient(long idingredient) {
+        this.idingredient = idingredient;
+    }
+
+    public long getRid() {
+        return rid;
+    }
+
+    public void setRid(long rid) {
+        this.rid = rid;
+    }
 
     public int getQuantity() {
         return quantity;
@@ -23,7 +46,10 @@ public class Ingredient implements Parcelable{
         return name;
     }
 
-    public Ingredient(int quantity, String measure, String name) {
+    public Ingredient(){}
+
+    public Ingredient(long recipeId, int quantity, String measure, String name) {
+        this.rid = recipeId;
         this.quantity = quantity;
         this.measure = measure;
         this.name = name;
@@ -39,35 +65,4 @@ public class Ingredient implements Parcelable{
             e.printStackTrace();
         }
     }
-
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(quantity);
-        dest.writeString(measure);
-        dest.writeString(name);
-    }
-
-    protected Ingredient(Parcel in) {
-        quantity = in.readInt();
-        measure = in.readString();
-        name = in.readString();
-    }
-
-    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
-        @Override
-        public Ingredient createFromParcel(Parcel in) {
-            return new Ingredient(in);
-        }
-
-        @Override
-        public Ingredient[] newArray(int size) {
-            return new Ingredient[size];
-        }
-    };
 }

@@ -28,19 +28,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        SugarContext.init(this);
         recipeList = (RecyclerView) findViewById(R.id.recipeList);
         recipeList.setLayoutManager(new GridLayoutManager(this,mColumnCount));
         rAdapter = new RecipeAdapter(Collections.EMPTY_LIST);
         recipeList.setAdapter(rAdapter);
         loadRecipes();
-        SugarContext.init(this);
-        RecipeProvider rp = new RecipeProvider("ABC","1");
-        rp.save();
-        RecipeProvider rp2 = new RecipeProvider("ABC","2");
-        rp2.save();
-        RecipeProvider rp3 = new RecipeProvider("DEF","1");
-        rp3.save();
     }
 
     public void loadRecipes(){
@@ -62,7 +55,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> data) {
         Log.d("LOADER","loader finished: "+data.size());
-        rAdapter.setRecipes(data);
+        List<Recipe> recipes = Recipe.listAll(Recipe.class);
+        rAdapter.setRecipes(recipes);
+
+
         Log.d("DATASIZE",""+rAdapter.getItemCount());
     }
 

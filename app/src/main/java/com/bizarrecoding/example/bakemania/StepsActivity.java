@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+
 import com.bizarrecoding.example.bakemania.fragments.StepDetailsFragment;
 import com.bizarrecoding.example.bakemania.fragments.StepListFragment;
 import com.bizarrecoding.example.bakemania.fragments.StepListFragment.StepClickListener;
@@ -24,15 +26,16 @@ public class StepsActivity extends AppCompatActivity implements StepClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_steps);
-        recipe = getIntent().getParcelableExtra("Recipe");
+        long selectedRecipe = getIntent().getLongExtra("Recipe",0);
+        recipe = Recipe.findById(Recipe.class,selectedRecipe);
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setTitle(recipe.getName());
         }
         is2pane = findViewById(R.id.details) != null;
-        StepListFragment list = StepListFragment.newInstance(recipe);
+        StepListFragment list = StepListFragment.newInstance(recipe.getId());
         getSupportFragmentManager().beginTransaction()
-            .add(R.id.recipeList, list)
+            .replace(R.id.recipeList, list)
             .commit();
     }
 
@@ -40,17 +43,18 @@ public class StepsActivity extends AppCompatActivity implements StepClickListene
     public void onStepClickListener(Step step) {
         if(is2pane){
             // TODO: add fragment
-            StepDetailsFragment recipeDeteails = StepDetailsFragment.newInstance(step);
+            Log.d("STEP","sid: "+step.getSid()+"\nrid: "+step.getRid());
+            StepDetailsFragment recipeDeteails = StepDetailsFragment.newInstance(step.getId());
             fm = getSupportFragmentManager();
             fm.beginTransaction()
-                    .add(R.id.details,recipeDeteails)
+                    .replace(R.id.details,recipeDeteails)
                     .commit();
         }else{
             // TODO: start by intent
             Intent in = new Intent(this, StepDetailsActivity.class);
-            in.putExtra("CurrentStep",step.getId()-1);
-            ArrayList<Step> steps = (ArrayList<Step>) recipe.getSteps();
-            in.putParcelableArrayListExtra("Steps",steps);
+            in.putExtra("CurrentStep",step.getId());
+            //ArrayList<Step> steps = (ArrayList<Step>) recipe.getSteps();
+            in.putExtra("Steps",recipe.getId());
             startActivity(in);
         }
     }

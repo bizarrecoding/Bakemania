@@ -9,7 +9,9 @@ import android.view.View;
 
 import com.anton46.stepsview.StepsView;
 import com.bizarrecoding.example.bakemania.adapters.StepPagerAdapter;
+import com.bizarrecoding.example.bakemania.objects.Recipe;
 import com.bizarrecoding.example.bakemania.objects.Step;
+import com.orm.SugarRecord;
 
 import java.util.ArrayList;
 
@@ -30,8 +32,10 @@ public class StepDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_step_details);
 
         stepList = new ArrayList<>();
-        stepList = getIntent().getParcelableArrayListExtra("Steps");
-        stepIndex =  getIntent().getIntExtra("CurrentStep",0);
+        //stepList = getIntent().getParcelableArrayListExtra("Steps");
+        Recipe r = Recipe.findById(Recipe.class,getIntent().getLongExtra("Steps",0));
+        stepList = (ArrayList<Step>) Step.find(Step.class,"rid=?",String.valueOf(r.getId()));  //(ArrayList<Step>) r.getSteps();
+        stepIndex =  (int) getIntent().getLongExtra("CurrentStep",0);
         step = stepList.get(stepIndex);
 
         stepPager = (ViewPager)findViewById(R.id.stepPager);
