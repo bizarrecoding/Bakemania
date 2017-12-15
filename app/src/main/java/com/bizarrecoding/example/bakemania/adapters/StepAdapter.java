@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bizarrecoding.example.bakemania.R;
@@ -11,6 +13,9 @@ import com.bizarrecoding.example.bakemania.fragments.StepListFragment.StepClickL
 import com.bizarrecoding.example.bakemania.objects.Step;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
 
@@ -49,16 +54,16 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
         return mSteps.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder{
         final View mView;
-        final TextView mIdView;
-        final TextView mContentView;
+        @BindView(R.id.stepLayout) LinearLayout mLayout;
+        @BindView(R.id.id) TextView mIdView;
+        @BindView(R.id.content) TextView mContentView;
 
         ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            ButterKnife.bind(this, view);
         }
     }
 }

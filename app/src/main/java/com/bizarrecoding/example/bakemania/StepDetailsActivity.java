@@ -2,6 +2,7 @@ package com.bizarrecoding.example.bakemania;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,17 +33,21 @@ public class StepDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_step_details);
 
         stepList = new ArrayList<>();
-        //stepList = getIntent().getParcelableArrayListExtra("Steps");
         Recipe r = Recipe.findById(Recipe.class,getIntent().getLongExtra("Steps",0));
-        stepList = (ArrayList<Step>) Step.find(Step.class,"rid=?",String.valueOf(r.getId()));  //(ArrayList<Step>) r.getSteps();
-        stepIndex =  (int) getIntent().getLongExtra("CurrentStep",0);
-        step = stepList.get(stepIndex);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.setTitle(r.getName());
+        }
+        stepList = (ArrayList<Step>) Step.find(Step.class,"rid=?",String.valueOf(r.getId()));
+        long sindex = getIntent().getLongExtra("CurrentStep",0);
+        step = Step.findById(Step.class,sindex);
 
         stepPager = (ViewPager)findViewById(R.id.stepPager);
         stepPagerAdapter = new StepPagerAdapter(getSupportFragmentManager(),stepList);
         stepPager.setAdapter(stepPagerAdapter);
-        stepPager.setCurrentItem(stepIndex);
-        currentPage = stepIndex;
+        Log.d("STEP sid",""+step.getSid()+"  -  "+step.getIntSid());
+        stepPager.setCurrentItem(step.getIntSid());
+        currentPage = step.getIntSid();
         stepPager.setOffscreenPageLimit(1);
         stepPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -70,7 +75,7 @@ public class StepDetailsActivity extends AppCompatActivity {
         stepNavView.setLabels(labels)
                 .setBarColorIndicator(getResources().getColor(R.color.cardview_dark_background))
                 .setProgressColorIndicator(getResources().getColor(R.color.colorPrimary))
-                .setCompletedPosition(stepIndex);
+                .setCompletedPosition(step.getIntSid());
         stepNavView.drawView();
     }
 }

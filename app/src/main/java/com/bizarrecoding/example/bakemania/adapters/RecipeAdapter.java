@@ -58,10 +58,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             public void onClick(View v) {
                 Intent in = new Intent(ctx, StepsActivity.class);
                 in.putExtra("Recipe",recipe.getId());
-                Log.d("RECIPE","selected: "+recipe.getId()
-                        +"\nrid: "+recipe.getRid());
+                //Log.d("RECIPE","selected: "+recipe.getId() +"\nrid: "+recipe.getRid());
                 ctx.startActivity(in);
-                //TODO: open stepsActivity intent
             }
         });
     }
@@ -71,13 +69,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         return recipes.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public View root;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        View root;
         @BindView(R.id.cover) ImageView mCover;
         @BindView(R.id.title) TextView mTitle;
         @BindView(R.id.content) TextView mContent;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             root = view;
             ButterKnife.bind(this, view);

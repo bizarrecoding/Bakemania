@@ -20,7 +20,8 @@ public class Step extends SugarRecord{
     String thumbnailURL;
 
     public long getSid(){return sid;}
-    public void setSid(long Sid){ this.sid=sid;}
+    public int getIntSid(){return (int)sid;}
+    public void setSid(long sid){ this.sid=sid;}
     public long getRid(){return rid;}
     public void setRid(long rid){ this.rid=rid;}
     public String getShortDescription() {
@@ -56,5 +57,14 @@ public class Step extends SugarRecord{
             Log.e("Error",e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString(){
+        return "id:"+getId()
+                +"\nStep id:"+getSid()
+                +"\nRecipe id:"+getRid()
+                +"\n"+shortDescription
+                +"\n"+videoURL;
     }
 }

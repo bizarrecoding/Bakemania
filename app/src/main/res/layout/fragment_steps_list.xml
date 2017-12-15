@@ -1,13 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="com.bizarrecoding.example.bakemania.RecipeFragment"
+    android:id="@+id/recipeInfo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="com.bizarrecoding.example.bakemania.fragments.StepListFragment"
-    tools:listitem="@layout/fragment_step" />
+    android:fillViewport="true"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/ingBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@null"
+        android:text="@string/ingredients"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/ingredientList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:visibility="visible"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.bizarrecoding.example.bakemania.fragments.StepListFragment"
+        tools:listitem="@layout/fragment_ingredient" />
+
+    <Button
+        android:id="@+id/stepBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@null"
+        android:text="@string/steps"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/stepList"
+        android:name="com.bizarrecoding.example.bakemania.RecipeFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.bizarrecoding.example.bakemania.fragments.StepListFragment"
+        tools:listitem="@layout/fragment_step" />
+</LinearLayout>
+

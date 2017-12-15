@@ -3,12 +3,9 @@ package com.bizarrecoding.example.bakemania.objects;
 import android.util.Log;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe extends SugarRecord{
@@ -16,8 +13,7 @@ public class Recipe extends SugarRecord{
     String name;
     int servings;
     String image;
-    //List<Ingredient> ingredients;
-    //List<Step> steps;
+    int remember;
 
     public long getRid(){ return rid; }
     public String getName() {
@@ -29,22 +25,19 @@ public class Recipe extends SugarRecord{
     public String getImage() {
         return image;
     }
-/*    public List<Ingredient> getIngredients() {
-        return ingredients;
+    public int getRemember(){ return remember; }
+
+    public void setRemember(int remember){
+        this.remember= remember;
     }
-    public List<Step> getSteps() {
-        return steps;
-    }
-*/
+
     public Recipe(){}
 
     public Recipe(int id, String name, int servings, String image, List<Ingredient> ingredients, List<Step> steps) {
         this.rid = id;
         this.name = name;
         this.servings = servings;
-        this.image = image;/*
-        this.ingredients = ingredients;
-        this.steps = steps;*/
+        this.image = image;
     }
 
     public Recipe(JSONObject json) {
@@ -56,18 +49,29 @@ public class Recipe extends SugarRecord{
             if(json.has("ingredients")){
                 JSONArray ingredientsjs = json.getJSONArray("ingredients");
                 for (int i = 0; i < ingredientsjs.length(); i++ ){
-                    JSONObject ingredientObj = ingredientsjs.getJSONObject(i);
-                    Ingredient ingredient = new Ingredient(ingredientObj);
-                    ingredient.setRid(rid);
-                    ingredient.setIdingredient(i);
-                    ingredient.setId(rid*100+i);
-                    String[] values = new String[]{ String.valueOf(i) };
+                    String[] values = new String[]{ String.valueOf(rid*100+i) };
                     boolean exist = 0 < Ingredient.count(Ingredient.class,"idingredient=?",values);
-                    ingredient.update();
+                    JSONObject ingredientObj = ingredientsjs.getJSONObject(i);
                     if(!exist){
+                        Ingredient ingredient = new Ingredient(ingredientObj);
+                        ingredient.setRid(rid);
+                        ingredient.setIdingredient(i);
+                        ingredient.setId(rid*100+i);
                         ingredient.save();
                     }else{
-                        ingredient.update();
+                        //ingredient.update();
+                        try{
+                            int quantity = ingredientObj.has("quantity") ? ingredientObj.getInt("quantity") : 0;
+                            String measure  = ingredientObj.has("measure") ? ingredientObj.getString("measure") : "";
+                            String name  = ingredientObj.has("ingredient") ? ingredientObj.getString("ingredient") : "";
+                            Ingredient.executeQuery(
+                                    "UPDATE INGREDIENT SET NAME = ?, MEASURE = ?, QUANTITY =? WHERE ID = ?",
+                                    new String[]{name,measure,String.valueOf(quantity),String.valueOf(rid*100+i)}
+                            );
+                        }catch (Exception e){
+                            Log.e("Error",e.getMessage());
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -81,7 +85,6 @@ public class Recipe extends SugarRecord{
                     step.setId(rid*100+i);
                     String[] values = new String[]{String.valueOf(rid*100+i)};
                     boolean exist = 0 < Step.count(Step.class, "sid=?", values);
-                    //Log.d("STEPS CREATE","step sid:"+step.sid+"\nrid: "+rid+"\nfound: "+exist);
                     if(!exist){
                         step.save();
                     }else{
@@ -89,6 +92,7 @@ public class Recipe extends SugarRecord{
                     }
                 }
             }
+            this.remember = 0; //rid == 2 ? 1 : 0;
         } catch (JSONException e) {
             Log.e("Error",e.getMessage());
             e.printStackTrace();

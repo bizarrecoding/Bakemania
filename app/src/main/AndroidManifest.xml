@@ -4,6 +4,7 @@
     package="com.bizarrecoding.example.bakemania">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -16,8 +17,8 @@
 
 
         <meta-data android:name="DATABASE" android:value="bakemania.db" />
-        <meta-data android:name="VERSION" android:value="3" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="VERSION" android:value="1" />
+        <meta-data android:name="QUERY_LOG" android:value="false" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.bizarrecoding.example.bakemania"/>
 
         <activity android:name=".MainActivity">
@@ -30,9 +31,13 @@
         <activity android:name=".StepDetailsActivity" />
         <activity android:name=".StepsActivity" />
 
+        <service android:name=".RemoteIngredientViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
         <receiver android:name=".BakeListWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="INGREDIENT_TAKEN" />
             </intent-filter>
 
             <meta-data

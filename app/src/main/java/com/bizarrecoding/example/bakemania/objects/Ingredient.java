@@ -17,6 +17,7 @@ public class Ingredient extends SugarRecord{
     int quantity;
     String measure;
     String name;
+    int taken;
 
     public long getIdingredient() {
         return idingredient;
@@ -46,6 +47,15 @@ public class Ingredient extends SugarRecord{
         return name;
     }
 
+    public int getTaken() {
+        return taken;
+    }
+
+    public void setTaken() {
+
+        this.taken = taken == 0 ? 1 : 0;
+    }
+
     public Ingredient(){}
 
     public Ingredient(long recipeId, int quantity, String measure, String name) {
@@ -57,12 +67,19 @@ public class Ingredient extends SugarRecord{
 
     public Ingredient(JSONObject values){
         try{
+            this.taken = 0;
             this.quantity = values.has("quantity") ? values.getInt("quantity") : 0;
             this.measure  = values.has("measure") ? values.getString("measure") : "";
-            this.name  = values.has("name") ? values.getString("name") : "";
+            this.name  = values.has("ingredient") ? values.getString("ingredient") : "";
         }catch (Exception e){
             Log.e("Error",e.getMessage());
             e.printStackTrace();
         }
     }
+    @Override
+    public String toString(){
+        //Log.d("ingredient #"+this.getId(),taken+" "+name+"  "+quantity+measure.toLowerCase());
+        return name+"  "+quantity+measure.toLowerCase();
+    }
+
 }

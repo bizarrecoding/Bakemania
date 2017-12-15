@@ -34,6 +34,11 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.Cache;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Util;
 
 import butterknife.BindView;
@@ -74,14 +79,15 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_step_details, container, false);
         ButterKnife.bind(this, view);
-        if (step.getId() > 0) {
-            title.setText("Step #" + stepId);
+        if (step.getSid() > 0) {
+            title.setText("Step #" + step.getSid());
         }else{
             title.setText("Introduction");
         }
         description.setText(step.getDescription());
         if(step.getVideoURL().length()==0){
             mPlayerView.setVisibility(View.GONE);
+            video.getLayoutParams().width = 0;
         }else {
             initializePlayer();
         }
@@ -94,6 +100,7 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
             mExoPlayer.stop();
             mExoPlayer.release();
         }
+        
         super.onDestroy();
     }
 
@@ -105,12 +112,21 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
             mPlayerView.setPlayer(mExoPlayer);
 
             Uri mediaUri = Uri.parse(step.getVideoURL());
-            Log.d("mediaUri",mediaUri.toString());
+            //Log.d("mediaUri",mediaUri.toString());
             // HttpDataSource mSource
             String userAgent = Util.getUserAgent(getContext(),getString(R.string.app_name));
+
+
+            final DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getActivity(),
+                    Util.getUserAgent(getContext(), userAgent));
+            Cache cache = new SimpleCache(getActivity().getCacheDir(), new LeastRecentlyUsedCacheEvictor(1024 * 1024 * 10));
+            CacheDataSourceFactory cacheDataSourceFactory = new CacheDataSourceFactory(cache, dataSourceFactory, CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+
+
             MediaSource mSource = new ExtractorMediaSource(
                     mediaUri,
-                    new DefaultDataSourceFactory(getActivity(),userAgent),
+                    //new DefaultDataSourceFactory(getActivity(),userAgent),
+                    cacheDataSourceFactory,
                     new DefaultExtractorsFactory(),
                     null,
                     null);
