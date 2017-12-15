@@ -33,6 +33,8 @@ public class StepsActivity extends AppCompatActivity implements StepClickListene
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setTitle(recipe.getName());
+            actionBar.setIcon(R.mipmap.ic_launcher);
+            actionBar.setLogo(R.mipmap.ic_launcher);
         }
         is2pane = findViewById(R.id.details) != null;
 

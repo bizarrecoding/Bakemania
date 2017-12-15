@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ButterKnife.bind(this);
         long recipeCount = Recipe.count(Recipe.class);
         showProgress(true);
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
         recipeList.setLayoutManager(new GridLayoutManager(this,mColumnCount));
         rAdapter = new RecipeAdapter(Collections.EMPTY_LIST);
