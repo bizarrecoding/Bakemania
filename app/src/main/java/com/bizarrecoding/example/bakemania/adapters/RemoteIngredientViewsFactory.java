@@ -1,6 +1,5 @@
 package com.bizarrecoding.example.bakemania.adapters;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.AdapterView;
@@ -10,9 +9,7 @@ import android.widget.RemoteViewsService;
 import com.bizarrecoding.example.bakemania.BakeListWidget;
 import com.bizarrecoding.example.bakemania.R;
 import com.bizarrecoding.example.bakemania.objects.Ingredient;
-import com.bizarrecoding.example.bakemania.objects.Recipe;
 import com.orm.SugarContext;
-import com.orm.SugarRecord;
 
 import java.util.List;
 
@@ -40,7 +37,7 @@ public class RemoteIngredientViewsFactory implements RemoteViewsService.RemoteVi
 
     @Override
     public void onDataSetChanged() {
-        this.ingredients = Ingredient.find(Ingredient.class,"rid=?",new String[]{String.valueOf(rid)});
+        this.ingredients = Ingredient.find(Ingredient.class,"rid=?", String.valueOf(rid));
     }
 
     @Override

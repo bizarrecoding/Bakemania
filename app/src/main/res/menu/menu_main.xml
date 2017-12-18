@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/remember"
         android:icon="@android:drawable/ic_menu_view"
-        android:title="Show on widget" />
+        android:title="@string/show_on_widget" />
 </menu>

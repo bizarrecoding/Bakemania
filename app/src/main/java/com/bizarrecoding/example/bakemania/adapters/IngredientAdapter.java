@@ -39,7 +39,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(final IngredientAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final IngredientAdapter.ViewHolder holder, int position) {
         final Ingredient i = ingredients.get(position);
         holder.ingredient.setText(i.getName());
         holder.ingredient.setTextColor(i.getTaken() == 0 ? Color.BLACK : Color.GRAY);
@@ -47,7 +47,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
         holder.ingredient.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                update(position);
+                update(holder.getAdapterPosition());                                        //check position
                 holder.ingredient.setTextColor(isChecked ? Color.GRAY : Color.BLACK);
             }
         });
@@ -58,9 +58,9 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
         Ingredient i = ingredients.get(position);
         int taken = i.getTaken();
         if(taken==0){
-            Ingredient.executeQuery("UPDATE INGREDIENT SET TAKEN = 1 WHERE ID = ?",new String[]{String.valueOf(i.getId())});
+            Ingredient.executeQuery("UPDATE INGREDIENT SET TAKEN = 1 WHERE ID = ?", String.valueOf(i.getId()));
         }else{
-            Ingredient.executeQuery("UPDATE INGREDIENT SET TAKEN = 0 WHERE ID = ?",new String[]{String.valueOf(i.getId())});
+            Ingredient.executeQuery("UPDATE INGREDIENT SET TAKEN = 0 WHERE ID = ?", String.valueOf(i.getId()));
         }
         Intent in = new Intent(ctx,BakeListWidget.class);
         in.setAction(BakeListWidget.INGREDIENT_UPDATE);

@@ -1,8 +1,6 @@
 package com.bizarrecoding.example.bakemania;
 
-import android.content.Context;
 import android.net.ConnectivityManager;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final int RECIPE_LOADER = 111;
 
-    private int mColumnCount = 2;
+    private final int mColumnCount = 2;
     @BindView(R.id.recipeList) RecyclerView recipeList;
     @BindView(R.id.errormain) TextView errorTV;
     @BindView(R.id.progressBar) ProgressBar progressBar;
@@ -50,14 +49,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         showProgress(true);
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
+
+        DisplayMetrics dm = this.getResources().getDisplayMetrics();
+
+        Log.d("METRICS","=============================================="+
+                "\ndensity: "+dm.density+
+                "\nDPI: "+dm.densityDpi+
+                "\nxdp: "+(dm.widthPixels/dm.density)+
+                "\nydp: "+(dm.heightPixels/dm.density)+
+                "\n==============================================");
+
         recipeList.setLayoutManager(new GridLayoutManager(this,mColumnCount));
         rAdapter = new RecipeAdapter(Collections.EMPTY_LIST);
         recipeList.setAdapter(rAdapter);
         if(isOnline()){
             loadRecipes();
         }else if(recipeCount>0) {
-            List<Recipe> recipes = Recipe.listAll(Recipe.class);
-            rAdapter.setRecipes(recipes);
+            rAdapter.setRecipes();
             showProgress(false);
         }else{
             showError(R.string.no_recipes_found);
@@ -92,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 cm.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 
-    public void loadRecipes(){
+    private void loadRecipes(){
         LoaderManager lm = getSupportLoaderManager();
         Loader loader = lm.getLoader(RECIPE_LOADER);
         if(loader != null){
@@ -109,8 +117,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> data) {
-        List<Recipe> recipes = Recipe.listAll(Recipe.class);
-        rAdapter.setRecipes(recipes);
+        rAdapter.setRecipes();
         mySwipeRefreshLayout.setRefreshing(false);
         showProgress(false);
     }
@@ -119,13 +126,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<List<Recipe>> loader){}
 
 
-    public void showProgress(boolean show){
+    private void showProgress(boolean show){
         progressBar.setVisibility( show ? View.VISIBLE : View.INVISIBLE);
         recipeList.setVisibility( show ? View.INVISIBLE : View.VISIBLE);
         errorTV.setVisibility(View.INVISIBLE);
     }
 
-    public void showError(int errorRes) {
+    private void showError(int errorRes) {
         progressBar.setVisibility(View.INVISIBLE);
         recipeList.setVisibility(View.INVISIBLE);
         errorTV.setVisibility(View.VISIBLE);

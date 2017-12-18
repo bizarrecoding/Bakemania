@@ -10,4 +10,6 @@
     <string name="connection_error">Connection error</string>
     <string name="ingredients">Ingredients</string>
     <string name="steps">Steps</string>
+    <string name="refresh">Refresh</string>
+    <string name="show_on_widget">Show on widget</string>
 </resources>

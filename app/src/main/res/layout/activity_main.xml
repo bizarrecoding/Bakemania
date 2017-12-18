@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.bizarrecoding.example.bakemania.MainActivity">
 
 
@@ -43,5 +44,4 @@
         android:text="@string/no_recipes_found"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:visibility="gone" />
-
-</FrameLayout>
+</LinearLayout>

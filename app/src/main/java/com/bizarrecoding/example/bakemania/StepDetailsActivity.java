@@ -1,27 +1,22 @@
 package com.bizarrecoding.example.bakemania;
 
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import com.anton46.stepsview.StepsView;
 import com.bizarrecoding.example.bakemania.adapters.StepPagerAdapter;
 import com.bizarrecoding.example.bakemania.objects.Recipe;
 import com.bizarrecoding.example.bakemania.objects.Step;
-import com.orm.SugarRecord;
 
 import java.util.ArrayList;
 
 public class StepDetailsActivity extends AppCompatActivity {
 
-    private FragmentManager fm;
     private ArrayList<Step> stepList;
     private Step step;
-    private int stepIndex;
     private int currentPage = 0;
     private ViewPager stepPager;
     private StepPagerAdapter stepPagerAdapter;

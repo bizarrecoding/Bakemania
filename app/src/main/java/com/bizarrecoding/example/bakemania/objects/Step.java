@@ -1,15 +1,8 @@
 package com.bizarrecoding.example.bakemania.objects;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
-
 import com.orm.SugarRecord;
-import com.orm.dsl.Unique;
-
 import org.json.JSONObject;
-import java.io.Serializable;
-
 
 public class Step extends SugarRecord{
     long sid;
@@ -32,9 +25,6 @@ public class Step extends SugarRecord{
     }
     public String getVideoURL() {
         return videoURL;
-    }
-    public String getThumbnail() {
-        return thumbnailURL;
     }
 
     public Step(){}

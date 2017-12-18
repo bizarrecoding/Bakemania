@@ -6,10 +6,8 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.RemoteViewsService;
 
 import com.bizarrecoding.example.bakemania.objects.Ingredient;
 import com.bizarrecoding.example.bakemania.objects.Recipe;
@@ -29,11 +27,10 @@ public class BakeListWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
         SugarContext.init(context);
-        List<Recipe> rpList = SugarRecord.find(Recipe.class,"remember=?",new String[]{"1"});
+        List<Recipe> rpList = SugarRecord.find(Recipe.class,"remember=?", "1");
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.bake_list_widget);
         if(rpList.size()>0) {
             Recipe rp = rpList.get(0);
-            List<Ingredient> ingredients = Ingredient.find(Ingredient.class, "rid=?", new String[]{"1"});
             CharSequence widgetText = rp.getName();
             views.setTextViewText(R.id.appwidget_text, widgetText);
             views.setTextViewText(R.id.appwidget_servings, String.valueOf(rp.getServings()));
@@ -69,7 +66,6 @@ public class BakeListWidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        //Log.d("WIDGET receiver","action: "+intent.getAction());
 
         AppWidgetManager appWidgetManager = AppWidgetManager
                 .getInstance(context);
@@ -82,11 +78,8 @@ public class BakeListWidget extends AppWidgetProvider {
             case INGREDIENT_TAKEN:
                 long i = intent.getLongExtra("ingredient", 0);
                 Ingredient ingredient = Ingredient.findById(Ingredient.class, i);
-                //Log.d("WIDGET","update ingredient "+i+": taken = "+ingredient.getTaken() );
                 int value = ingredient.getTaken() == 1 ? 0 : 1;
-                Ingredient.executeQuery("UPDATE INGREDIENT SET TAKEN = "+value+" WHERE ID = ?",new String[]{String.valueOf(i)});
-                ingredient = Ingredient.findById(Ingredient.class, i);
-                //Log.d("WIDGET","update ingredient "+i+": taken = "+ingredient.getTaken() );
+                Ingredient.executeQuery("UPDATE INGREDIENT SET TAKEN = "+value+" WHERE ID = ?", String.valueOf(i));
                 appWidgetManager.notifyAppWidgetViewDataChanged(ids,R.id.appwidget_ingredients);
                 onUpdate(context, appWidgetManager, ids);
                 break;

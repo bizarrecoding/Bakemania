@@ -1,14 +1,8 @@
 package com.bizarrecoding.example.bakemania.objects;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
-
 import com.orm.SugarRecord;
-import com.orm.dsl.Unique;
-
 import org.json.JSONObject;
-import java.io.Serializable;
 
 public class Ingredient extends SugarRecord{
 
@@ -19,16 +13,9 @@ public class Ingredient extends SugarRecord{
     String name;
     int taken;
 
-    public long getIdingredient() {
-        return idingredient;
-    }
 
     public void setIdingredient(long idingredient) {
         this.idingredient = idingredient;
-    }
-
-    public long getRid() {
-        return rid;
     }
 
     public void setRid(long rid) {
@@ -49,11 +36,6 @@ public class Ingredient extends SugarRecord{
 
     public int getTaken() {
         return taken;
-    }
-
-    public void setTaken() {
-
-        this.taken = taken == 0 ? 1 : 0;
     }
 
     public Ingredient(){}

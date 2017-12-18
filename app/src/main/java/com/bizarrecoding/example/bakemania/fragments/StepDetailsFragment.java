@@ -1,14 +1,8 @@
 package com.bizarrecoding.example.bakemania.fragments;
 
-import android.content.Context;
-import android.media.session.MediaSession;
-import android.media.session.MediaSession.Callback;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

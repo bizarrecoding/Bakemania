@@ -22,10 +22,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
-/**
- * Created by Herik on 24/10/2017.
- */
-
 @RunWith(AndroidJUnit4.class)
 public class MenuGridTest {
 
@@ -35,6 +31,7 @@ public class MenuGridTest {
     @Test
     public void ActionBarTitle(){
         onView(withId(R.id.recipeList)).perform(actionOnItemAtPosition(1,click()));
+
         ViewInteraction textView = onView(
                 childAtPosition(
                         allOf(

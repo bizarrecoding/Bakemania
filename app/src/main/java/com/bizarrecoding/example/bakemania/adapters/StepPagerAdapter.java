@@ -10,11 +10,8 @@ import com.bizarrecoding.example.bakemania.objects.Step;
 import java.util.ArrayList;
 
 public class StepPagerAdapter extends FragmentStatePagerAdapter{
-    private final ArrayList<Step> steps;
 
-    public ArrayList<Step> getSteps() {
-        return steps;
-    }
+    private final ArrayList<Step> steps;
 
     public StepPagerAdapter(FragmentManager fm, ArrayList<Step> steps) {
         super(fm);

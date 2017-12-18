@@ -25,7 +25,6 @@ public class Recipe extends SugarRecord{
     public String getImage() {
         return image;
     }
-    public int getRemember(){ return remember; }
 
     public void setRemember(int remember){
         this.remember= remember;
@@ -33,7 +32,7 @@ public class Recipe extends SugarRecord{
 
     public Recipe(){}
 
-    public Recipe(int id, String name, int servings, String image, List<Ingredient> ingredients, List<Step> steps) {
+    public Recipe(int id, String name, int servings, String image){
         this.rid = id;
         this.name = name;
         this.servings = servings;

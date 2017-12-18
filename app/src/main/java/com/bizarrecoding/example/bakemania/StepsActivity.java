@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +15,7 @@ import com.bizarrecoding.example.bakemania.fragments.StepListFragment;
 import com.bizarrecoding.example.bakemania.fragments.StepListFragment.StepClickListener;
 import com.bizarrecoding.example.bakemania.objects.Recipe;
 import com.bizarrecoding.example.bakemania.objects.Step;
+import com.orm.SugarContext;
 
 public class StepsActivity extends AppCompatActivity implements StepClickListener{
 
@@ -28,6 +28,7 @@ public class StepsActivity extends AppCompatActivity implements StepClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_steps);
+        SugarContext.init(this);
         long selectedRecipe = getIntent().getLongExtra("Recipe",0);
         recipe = Recipe.findById(Recipe.class,selectedRecipe);
         ActionBar actionBar = getSupportActionBar();
