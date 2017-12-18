@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,13 +50,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
         DisplayMetrics dm = this.getResources().getDisplayMetrics();
-
-        Log.d("METRICS","=============================================="+
-                "\ndensity: "+dm.density+
-                "\nDPI: "+dm.densityDpi+
-                "\nxdp: "+(dm.widthPixels/dm.density)+
-                "\nydp: "+(dm.heightPixels/dm.density)+
-                "\n==============================================");
 
         recipeList.setLayoutManager(new GridLayoutManager(this,mColumnCount));
         rAdapter = new RecipeAdapter(Collections.EMPTY_LIST);
