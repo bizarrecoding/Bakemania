@@ -29,13 +29,13 @@ public class StepsActivity extends AppCompatActivity implements StepClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_steps);
         SugarContext.init(this);
+
         long selectedRecipe = getIntent().getLongExtra("Recipe",0);
         recipe = Recipe.findById(Recipe.class,selectedRecipe);
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setTitle(recipe.getName());
-            actionBar.setIcon(R.mipmap.ic_launcher);
-            actionBar.setLogo(R.mipmap.ic_launcher);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
         is2pane = findViewById(R.id.details) != null;
 
@@ -87,18 +87,24 @@ public class StepsActivity extends AppCompatActivity implements StepClickListene
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.remember){
-            for (Recipe r : Recipe.listAll(Recipe.class)){
-                r.setRemember(recipe.getRid()==r.getRid()? 1 : 0);
-                r.update();
-                //Log.d("Remember "+r.getRemember(),"widget update for "+r.getRid());
-                if(recipe.getRid()==r.getRid()){
-                    Context context = getApplicationContext();
-                    Intent in = new Intent(context,BakeListWidget.class);
-                    in.setAction(BakeListWidget.REMEMBER_UPDATE);
-                    sendBroadcast(in);
+
+        switch (item.getItemId()){
+            case R.id.remember:
+                for (Recipe r : Recipe.listAll(Recipe.class)){
+                    r.setRemember(recipe.getRid()==r.getRid()? 1 : 0);
+                    r.update();
+                    //Log.d("Remember "+r.getRemember(),"widget update for "+r.getRid());
+                    if(recipe.getRid()==r.getRid()){
+                        Context context = getApplicationContext();
+                        Intent in = new Intent(context,BakeListWidget.class);
+                        in.setAction(BakeListWidget.REMEMBER_UPDATE);
+                        sendBroadcast(in);
+                    }
                 }
-            }
+                break;
+            case android.R.id.home:
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

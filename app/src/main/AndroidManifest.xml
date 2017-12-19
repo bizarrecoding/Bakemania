@@ -28,8 +28,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StepDetailsActivity" />
-        <activity android:name=".StepsActivity" />
+
+        <activity android:name=".StepsActivity"
+            android:parentActivityName="com.bizarrecoding.example.bakemania.MainActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bizarrecoding.example.bakemania.MainActivity" />
+        </activity>
+
+        <activity android:name=".StepDetailsActivity"
+            android:parentActivityName="com.bizarrecoding.example.bakemania.StepsActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bizarrecoding.example.bakemania.StepsActivity" />
+        </activity>
 
         <service android:name=".RemoteIngredientViewsService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>

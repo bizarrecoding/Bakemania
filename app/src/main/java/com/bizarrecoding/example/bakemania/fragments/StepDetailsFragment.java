@@ -3,6 +3,7 @@ package com.bizarrecoding.example.bakemania.fragments;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,8 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
     private Step step;
     private SimpleExoPlayer mExoPlayer;
     private long stepId;
+    private long position = 0;
+    private boolean ready = true;
 
     public StepDetailsFragment() {}
 
@@ -66,6 +69,21 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
             stepId = getArguments().getLong("Step");
             step = Step.findById(Step.class,stepId);
         }
+        if(savedInstanceState != null){
+            if(savedInstanceState.containsKey("position")) {
+                position = savedInstanceState.getLong("position");
+            }
+            if(savedInstanceState.containsKey("ready")){
+                ready = savedInstanceState.getBoolean("ready");
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("position",position);
+        outState.putBoolean("ready",ready);
     }
 
     @Override
@@ -89,13 +107,38 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mExoPlayer!=null){
+            Log.d("STATE","pos: "+position+"\nready: "+ready);
+            mExoPlayer.seekTo(position);
+            mExoPlayer.setPlayWhenReady(ready);
+        }else {
+            initializePlayer();
+            Log.d("STATE","reinit ExoPlayer");
+        }
+
+    }
+
+    @Override
     public void onDestroy() {
         if(mExoPlayer!=null) {
             mExoPlayer.stop();
             mExoPlayer.release();
         }
-        
         super.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mExoPlayer!=null) {
+            position = mExoPlayer.getCurrentPosition();
+
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
     }
 
     private void initializePlayer(){
@@ -125,7 +168,8 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
                     null,
                     null);
             mExoPlayer.prepare(mSource);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.seekTo(position);
+            mExoPlayer.setPlayWhenReady(ready);
         }
     }
 

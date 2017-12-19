@@ -10,6 +10,7 @@ import com.anton46.stepsview.StepsView;
 import com.bizarrecoding.example.bakemania.adapters.StepPagerAdapter;
 import com.bizarrecoding.example.bakemania.objects.Recipe;
 import com.bizarrecoding.example.bakemania.objects.Step;
+import com.orm.SugarContext;
 
 import java.util.ArrayList;
 
@@ -26,12 +27,13 @@ public class StepDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_details);
-
+        SugarContext.init(this);
         stepList = new ArrayList<>();
         Recipe r = Recipe.findById(Recipe.class,getIntent().getLongExtra("Steps",0));
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setTitle(r.getName());
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
         stepList = (ArrayList<Step>) Step.find(Step.class,"rid=?",String.valueOf(r.getId()));
         long sindex = getIntent().getLongExtra("CurrentStep",0);
