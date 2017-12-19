@@ -40,16 +40,20 @@ public class StepsActivity extends AppCompatActivity implements StepClickListene
         is2pane = findViewById(R.id.details) != null;
 
         if(savedInstanceState==null){
-            StepListFragment list = StepListFragment.newInstance(recipe.getId());
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.recipeList, list)
-                    .commit();
+            addListFragment();
         }else if(savedInstanceState.containsKey("selected")){
             showSelected = savedInstanceState.getBoolean("selected");
         }
         if (showSelected){
             findViewById(R.id.selection).setVisibility(View.GONE);
         }
+    }
+
+    private void addListFragment(){
+        StepListFragment list = StepListFragment.newInstance(recipe.getId());
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.recipeList, list)
+                .commit();
     }
 
     @Override

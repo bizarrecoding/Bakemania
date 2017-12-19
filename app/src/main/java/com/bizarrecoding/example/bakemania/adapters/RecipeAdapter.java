@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.bizarrecoding.example.bakemania.R;
 import com.bizarrecoding.example.bakemania.StepsActivity;
 import com.bizarrecoding.example.bakemania.objects.Recipe;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         holder.mTitle.setText(recipe.getName());
         holder.mContent.setText("for "+recipe.getServings()+" servings");
         if(recipe.getImage().length() > 0) {
-            holder.mCover.setImageResource(R.color.colorAccent);
+            Picasso.with(ctx).load(recipe.getImage()).into(holder.mCover);
         }else {
             holder.mCover.setVisibility(View.GONE);
         }

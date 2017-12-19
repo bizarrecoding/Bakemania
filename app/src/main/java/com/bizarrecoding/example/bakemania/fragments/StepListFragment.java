@@ -3,12 +3,16 @@ package com.bizarrecoding.example.bakemania.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bizarrecoding.example.bakemania.R;
 import com.bizarrecoding.example.bakemania.adapters.IngredientAdapter;
@@ -17,6 +21,8 @@ import com.bizarrecoding.example.bakemania.objects.Ingredient;
 import com.bizarrecoding.example.bakemania.objects.Recipe;
 import com.bizarrecoding.example.bakemania.objects.Step;
 import com.orm.SugarContext;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -25,15 +31,15 @@ import butterknife.ButterKnife;
 public class StepListFragment extends Fragment {
 
 
+    @BindView(R.id.nScroll) NestedScrollView nScrollView;
     @BindView(R.id.ingredientList) RecyclerView ingredientList;
     @BindView(R.id.stepList) RecyclerView stepList;
-    @BindView(R.id.stepBtn) Button stepTitle;
-    @BindView(R.id.ingBtn) Button ingTitle;
+    @BindView(R.id.recipeImage) ImageView rImage;
+
 
     private StepClickListener mListener;
     private Recipe recipe;
-    private boolean showSteps = true;
-    private boolean showIngredients = true;
+    private int scrolled = 0;
 
     public interface StepClickListener{
         void onStepClickListener(Step step);
@@ -58,19 +64,17 @@ public class StepListFragment extends Fragment {
             Long recipeId = getArguments().getLong("Recipe");
             recipe = Recipe.findById(Recipe.class,recipeId);
         }
-        if(savedInstanceState != null && savedInstanceState.containsKey("stepState")){
-            showSteps = savedInstanceState.getBoolean("stepState");
-        }
-        if(savedInstanceState != null && savedInstanceState.containsKey("ingState")){
-            showIngredients = savedInstanceState.getBoolean("ingState");
+        if(savedInstanceState != null){
+            if(savedInstanceState.containsKey("scrolled")){
+                scrolled = savedInstanceState.getInt("scrolled");
+            }
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("stepState",showSteps);
-        outState.putBoolean("ingState",showIngredients);
+        outState.putInt("scrolled",nScrollView.getScrollY());
     }
 
     @Override
@@ -79,29 +83,22 @@ public class StepListFragment extends Fragment {
         ButterKnife.bind(this,view);
         Context context = view.getContext();
 
-        ingredientList.setLayoutManager(new LinearLayoutManager(context));
+
+        if(recipe.getImage().length()>0) {
+            Picasso.with(getContext()).load(recipe.getImage()).into(rImage);
+        }else {
+            rImage.setVisibility(View.GONE);
+            //Picasso.with(getContext()).load(R.drawable.nutella_pie).into(rImage);
+        }
         List<Ingredient> ingredients = Step.find(Ingredient.class,"rid=?", String.valueOf(recipe.getRid()));
+        ingredientList.setLayoutManager(new LinearLayoutManager(context));
         ingredientList.setAdapter(new IngredientAdapter(ingredients,getActivity()));
-        ingredientList.setVisibility(showIngredients? View.VISIBLE : View.GONE);
-        ingTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showIngredients = !showIngredients;
-                ingredientList.setVisibility(showIngredients? View.VISIBLE : View.GONE);
-            }
-        });
-        stepList.setLayoutManager(new LinearLayoutManager(context));
+
         List<Step> steps = Step.find(Step.class,"rid=?", String.valueOf(recipe.getRid()));
-        //Log.d("STEPS","rid: "+recipe.getRid()+" found: "+steps.size());
+        stepList.setLayoutManager(new LinearLayoutManager(context));
         stepList.setAdapter(new StepAdapter(steps, mListener));
-        stepList.setVisibility(showSteps? View.VISIBLE : View.GONE);
-        stepTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSteps = !showSteps;
-                stepList.setVisibility(showSteps? View.VISIBLE : View.GONE);
-            }
-        });
+
+        nScrollView.scrollTo(nScrollView.getScrollX(),scrolled);
         return view;
     }
 

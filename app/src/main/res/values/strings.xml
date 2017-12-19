@@ -12,4 +12,5 @@
     <string name="steps">Steps</string>
     <string name="refresh">Refresh</string>
     <string name="show_on_widget">Show on widget</string>
+    <string name="intro">Introduction</string>
 </resources>

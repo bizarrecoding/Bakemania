@@ -36,6 +36,8 @@ import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvicto
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Util;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -48,7 +50,6 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
 
     private Step step;
     private SimpleExoPlayer mExoPlayer;
-    private long stepId;
     private long position = 0;
     private boolean ready = true;
 
@@ -66,7 +67,7 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            stepId = getArguments().getLong("Step");
+            long stepId = getArguments().getLong("Step");
             step = Step.findById(Step.class,stepId);
         }
         if(savedInstanceState != null){
@@ -75,6 +76,8 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
             }
             if(savedInstanceState.containsKey("ready")){
                 ready = savedInstanceState.getBoolean("ready");
+
+                Log.d("STATE","playing: "+ready);
             }
         }
     }
@@ -84,6 +87,7 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
         super.onSaveInstanceState(outState);
         outState.putLong("position",position);
         outState.putBoolean("ready",ready);
+        Log.d("STATE","playing: "+ready);
     }
 
     @Override
@@ -92,9 +96,9 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
         View view = inflater.inflate(R.layout.fragment_step_details, container, false);
         ButterKnife.bind(this, view);
         if (step.getSid() > 0) {
-            title.setText("Step #" + step.getSid());
+            title.setText(String.format(Locale.getDefault(),"Step #%d", step.getSid()));
         }else{
-            title.setText("Introduction");
+            title.setText(R.string.intro);
         }
         description.setText(step.getDescription());
         if(step.getVideoURL().length()==0){
@@ -110,12 +114,10 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
     public void onResume() {
         super.onResume();
         if (mExoPlayer!=null){
-            Log.d("STATE","pos: "+position+"\nready: "+ready);
             mExoPlayer.seekTo(position);
             mExoPlayer.setPlayWhenReady(ready);
         }else {
             initializePlayer();
-            Log.d("STATE","reinit ExoPlayer");
         }
 
     }
@@ -170,54 +172,28 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
             mExoPlayer.prepare(mSource);
             mExoPlayer.seekTo(position);
             mExoPlayer.setPlayWhenReady(ready);
+            mExoPlayer.addListener(this);
         }
     }
 
     @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
-
-    }
-
+    public void onTimelineChanged(Timeline timeline, Object manifest) {}
     @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-    }
-
+    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {}
     @Override
-    public void onLoadingChanged(boolean isLoading) {
-
-    }
-
+    public void onLoadingChanged(boolean isLoading) {}
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
+        ready = playWhenReady;
     }
-
     @Override
-    public void onPlayerError(ExoPlaybackException error) {
-
-    }
-
+    public void onPlayerError(ExoPlaybackException error) {}
     @Override
-    public void onPositionDiscontinuity() {
-
-    }
-
+    public void onPositionDiscontinuity() {}
     @Override
-    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
-    }
-
+    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {}
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (this.isVisible()){
-            if (!isVisibleToUser){   // If we are becoming invisible, then...
-                //pause or stop video
-            }
-            if (isVisibleToUser){
-                //play your video
-            }
-        }
     }
 }
