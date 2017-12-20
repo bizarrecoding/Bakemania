@@ -26,7 +26,9 @@ public class Step extends SugarRecord{
     public String getVideoURL() {
         return videoURL;
     }
-
+    public String getThumbnailURL() {
+        return thumbnailURL;
+    }
     public Step(){}
 
     public Step(int recipeId, String shortDescription, String description, String videoURL, String thumbnail) {

@@ -97,4 +97,14 @@ public class Recipe extends SugarRecord{
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String toString() {
+        Log.d("","====================================================="
+                +"\nid: "+this.getId()
+                +"\nname: "+this.getName()
+                +"\nservings: "+this.getServings()
+                +"\n=====================================================");
+        return super.toString();
+    }
 }

@@ -60,7 +60,7 @@ public class Ingredient extends SugarRecord{
     }
     @Override
     public String toString(){
-        //Log.d("ingredient #"+this.getId(),taken+" "+name+"  "+quantity+measure.toLowerCase());
+        Log.d("ingredient #"+this.getId(),taken+" "+name+"  "+quantity+measure.toLowerCase());
         return name+"  "+quantity+measure.toLowerCase();
     }
 

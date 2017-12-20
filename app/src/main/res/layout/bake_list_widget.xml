@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,8 +15,18 @@
         android:background="#09C"
         android:orientation="horizontal">
 
+        <ImageButton
+            android:id="@+id/appwidget_back"
+            style="@style/Widget.AppCompat.ImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/back_24"
+            android:visibility="visible"
+            app:srcCompat="@drawable/back_24" />
+
         <TextView
-            android:id="@+id/appwidget_text"
+            android:id="@+id/appwidget_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -30,7 +41,7 @@
             tools:text="Recipe" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/appwidget_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -38,7 +49,8 @@
             android:layout_marginTop="8dp"
             android:text="@string/servings"
             android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/appwidget_servings"
@@ -48,6 +60,7 @@
             android:text="@string/default_servings"
             android:textColor="@android:color/white"
             android:textSize="16sp"
+            android:visibility="visible"
             tools:text="4" />
 
     </LinearLayout>
@@ -58,7 +71,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/linearLayout"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="4dp"
@@ -72,16 +85,30 @@
             android:gravity="center_horizontal"
             android:text="@string/no_recipe_selected"
             android:textSize="16sp"
-            android:visibility="visible"
+            android:visibility="gone"
             tools:text="No recipe selected." />
 
+        <FrameLayout
+            android:id="@+id/swap_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/appwidget_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:context="com.bizarrecoding.example.bakemania.BakeListWidget"
+                tools:listitem="@layout/ingredient_item" />
+        </FrameLayout>
+
         <ListView
-            android:id="@+id/appwidget_ingredients"
+            android:id="@+id/appwidget_recipeList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:context="com.bizarrecoding.example.bakemania.BakeListWidget"
-            tools:listitem="@layout/ingredient_item" />
+            tools:listitem="@layout/recipe_item" />
 
     </FrameLayout>
 </RelativeLayout>

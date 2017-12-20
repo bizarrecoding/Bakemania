@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bizarrecoding.example.bakemania.R;
@@ -35,6 +36,7 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
 
@@ -47,6 +49,7 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
     @BindView(R.id.description) TextView description;
     @BindView(R.id.video) FrameLayout video;
     @BindView(R.id.player) SimpleExoPlayerView mPlayerView;
+    @BindView(R.id.thumbnail) ImageView thumbnail;
 
     private Step step;
     private SimpleExoPlayer mExoPlayer;
@@ -76,8 +79,6 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
             }
             if(savedInstanceState.containsKey("ready")){
                 ready = savedInstanceState.getBoolean("ready");
-
-                Log.d("STATE","playing: "+ready);
             }
         }
     }
@@ -87,7 +88,6 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
         super.onSaveInstanceState(outState);
         outState.putLong("position",position);
         outState.putBoolean("ready",ready);
-        Log.d("STATE","playing: "+ready);
     }
 
     @Override
@@ -101,12 +101,7 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
             title.setText(R.string.intro);
         }
         description.setText(step.getDescription());
-        if(step.getVideoURL().length()==0){
-            mPlayerView.setVisibility(View.GONE);
-            video.getLayoutParams().width = 0;
-        }else {
-            initializePlayer();
-        }
+        manageSource("onCreateView");
         return view;
     }
 
@@ -117,9 +112,33 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
             mExoPlayer.seekTo(position);
             mExoPlayer.setPlayWhenReady(ready);
         }else {
-            initializePlayer();
+            manageSource("onResume");
         }
+    }
 
+    public void manageSource(String from){
+        if( step.getVideoURL().length()==0 ){
+            String thumbnailURL = step.getThumbnailURL();
+            mPlayerView.setVisibility(View.GONE);
+            thumbnail.setVisibility(View.VISIBLE);
+            if( thumbnailURL.length()==0 ){
+                video.getLayoutParams().width = 0;
+                thumbnail.setVisibility(View.GONE);
+                //Picasso.with(getContext()).load(R.drawable.nutella_pie).into(thumbnail);
+            }else{
+                if(!thumbnailURL.contains(".mp4")){
+                    Picasso.with(getContext()).load(thumbnailURL).into(thumbnail);
+                }else{
+                    mPlayerView.setVisibility(View.VISIBLE);
+                    thumbnail.setVisibility(View.GONE);
+                    initializePlayer(from);
+                }
+            }
+        }else {
+            mPlayerView.setVisibility(View.VISIBLE);
+            thumbnail.setVisibility(View.GONE);
+            initializePlayer(from);
+        }
     }
 
     @Override
@@ -143,14 +162,18 @@ public class StepDetailsFragment extends Fragment implements ExoPlayer.EventList
         }
     }
 
-    private void initializePlayer(){
+    private void initializePlayer(String from){
         if(mPlayerView != null){
             TrackSelector ts = new DefaultTrackSelector();
             LoadControl lControl = new DefaultLoadControl();
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(this.getActivity(),ts,lControl);
             mPlayerView.setPlayer(mExoPlayer);
 
-            Uri mediaUri = Uri.parse(step.getVideoURL());
+            String source = step.getVideoURL();
+            if(step.getVideoURL().length()==0 && step.getThumbnailURL().contains(".mp4")) {
+                source = step.getThumbnailURL();
+            }
+            Uri mediaUri = Uri.parse(source);
             //Log.d("mediaUri",mediaUri.toString());
             // HttpDataSource mSource
             String userAgent = Util.getUserAgent(getContext(),getString(R.string.app_name));

@@ -34,6 +34,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="visible"
+            app:srcCompat="@drawable/nutella_pie" />
+
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/player"
             android:layout_width="match_parent"

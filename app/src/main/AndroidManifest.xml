@@ -24,7 +24,6 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -45,7 +44,9 @@
                 android:value="com.bizarrecoding.example.bakemania.StepsActivity" />
         </activity>
 
-        <service android:name=".RemoteIngredientViewsService"
+        <service android:name=".RemoteListViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service android:name=".RemoteRecipeViewsService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <receiver android:name=".BakeListWidget">
@@ -57,6 +58,11 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/bake_list_widget_info" />
+        </receiver>
+        <receiver android:name=".adapters.RemoteListViewsFactory">
+            <intent-filter>
+                <action android:name="INGREDIENT_UPDATE"/>
+            </intent-filter>
         </receiver>
     </application>
 
